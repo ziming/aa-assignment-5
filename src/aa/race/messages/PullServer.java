@@ -3,6 +3,8 @@ package aa.race.messages;
 import java.net.*;
 import java.util.Date;
 import java.io.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 // This class is only used in PULL mode. It represents a pull server which listens at a port for a pull client
 // When the client sends a request, messages from the message buffer are retrieved & sent back to the client.
@@ -15,6 +17,7 @@ public class PullServer extends Thread
     private MessageBuffer msgBuffer;
     private int portOfServer;
     private int period;
+    private static ReadWriteLock lock = new ReentrantReadWriteLock();
 
     // Constructor
     public PullServer(MessageBuffer msgBuffer, int portOfServer, int period)
@@ -43,6 +46,7 @@ public class PullServer extends Thread
             Socket clientSocket = null;
             clientSocket = serverSocket.accept();
 
+
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String outputLine;
@@ -53,9 +57,13 @@ public class PullServer extends Thread
                 if (exptTimeUp())
                     break;
 
+                lock.writeLock().lock();
+
                 outputLine = msgBuffer.getWholeMsgAndClear();
                 // send empty string if outputLine is null
                 out.println(outputLine == null ? "" : outputLine);
+
+                lock.writeLock().unlock();
             }
             // Clean up
             out.close();

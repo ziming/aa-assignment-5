@@ -1,6 +1,8 @@
 package aa.race.messages;
 
 import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 // This thread class is responsible for generating the events given the delay intervals, message buffer & message length of new messages
 // An event is manifested by the creation of a new message (of fixed length) & writing of that message to the message buffer.
@@ -11,6 +13,7 @@ public class EventGenerator extends Thread
     private ArrayList<Integer> delayIntervals;    // Array of delay intervals in seconds. for example: if the array is 3, 4, 1... , the first event will be fired, followed by a 3 sec pause, followed by a 2nd event, a 4 sec pause, the 3rd event, a 1 sec pause & so on...
     private int msgLength;                            // length of new messages
     private MessageBuffer msgBuffer;                // reference to message buffer object passed in through the constructor
+    private static ReadWriteLock lock = new ReentrantReadWriteLock();
 
     // Constructor
     public EventGenerator(ArrayList<Integer> delayIntervals, MessageBuffer msgBuffer, int msgLength)
@@ -40,7 +43,9 @@ public class EventGenerator extends Thread
             System.out.println("---");
 
             // Create event message & append it to message buffer
+            lock.writeLock().lock();
             msgBuffer.appendToBack(createNewMessage(rightNow, '~', msgLength, '*'));
+            lock.writeLock().unlock();
         }
         System.out.println("Exiting EventGenerator thread...");
     }

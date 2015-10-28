@@ -1,5 +1,8 @@
 package aa.race.messages;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReadWriteLock;
+
 /*
  * Message Buffer class
  * represents the Message Buffer to which the Event Generator will be "writing" to
@@ -10,6 +13,7 @@ public class MessageBuffer
     private int maxMsgSize;   // size of this buffer in number of characters. This size cannot be breached
     private int noOfDroppedCharSoFar;  // a running count of the number of characters which have been discarded because the buffer is full
     private boolean dropNewCharWhenBufferFull; // determines if new characters will push out old characters if an insert is attempted when the buffer is full
+    private static ReadWriteLock lock = new ReentrantReadWriteLock();
 
     // Constructor. initializes instance variables
     public MessageBuffer(int maxMsgSize, boolean dropNewCharWhenBufferFull)
@@ -53,7 +57,10 @@ public class MessageBuffer
                 return;
             }
             // whole message is inserted into buffer
+            lock.writeLock().lock();
             msg.append(newText);
+            lock.writeLock().unlock();
+
             return;
         }
 
@@ -75,7 +82,10 @@ public class MessageBuffer
                 return;
             }
             // Message buffer size is not breached: whole message is inserted into buffer & life carries on
+            lock.writeLock().lock();
             msg.append(newText);
+            lock.writeLock().unlock();
+
         }
     }
 
@@ -93,12 +103,13 @@ public class MessageBuffer
     }
 
     // Similar to getWholeMsg, except that the buffer is cleared after the message is retrieved
-    public String getWholeMsgAndClear()
-    {
+    public String getWholeMsgAndClear() {
+        lock.writeLock().lock();
         String temp = msg.toString();
         System.out.println("returning: " + msg + " then clearing");
         //  System.out.println("clearing");
         clear();
+        lock.writeLock().unlock();
         return (temp.length() == 0 ? null : temp);
     }
 
