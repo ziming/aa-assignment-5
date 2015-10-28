@@ -37,7 +37,7 @@ public class EventGenerator extends Thread {
             System.out.println("---");
 
             // Create event message & append it to message buffer
-            msgBuffer.appendToBack(createNewMessage(rightNow, '~', msgLength, '*'));
+            msgBuffer.setMessageBufferText(createNewMessage(rightNow, '~', msgLength, '*'));
         }
         System.out.println("Exiting EventGenerator thread...");
     }

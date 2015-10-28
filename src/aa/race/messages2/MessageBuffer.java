@@ -26,6 +26,12 @@ public class MessageBuffer
         this.dropNewCharWhenBufferFull = dropNewCharWhenBufferFull;
     }
 
+    // Our addition for problem 2, if only want the latest just override it!
+    public void setMessageBufferText(String newText) {
+        msg.setLength(0);
+        msg.append(newText);
+    }
+
     // Append a String to the back of the encapsulated message
     // Note that if the message buffer size is breached, characters will be dropped (discarded)
     // If dropNewCharWhenBufferFull is true, new characters will be dropped
@@ -59,7 +65,9 @@ public class MessageBuffer
                 return;
             }
             // whole message is inserted into buffer
+            // newText is something like 1446024217384~************************************************************~
             msg.append(newText);
+            System.out.println(msg.length());
             return;
         }
 
@@ -91,7 +99,10 @@ public class MessageBuffer
         reentrantLock.lock();
         try {
             if (msg.length() > 0)
+                // each message length is about 75
+//                System.out.println("Message length currently is: " + msg.length());
                 msg.delete(0, msg.length());
+//                System.out.println("Message length currently is: " + msg.length());
         } finally {
             reentrantLock.unlock();
         }

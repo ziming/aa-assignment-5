@@ -55,7 +55,8 @@ public class PullServer extends Thread {
                     break;
 
                 //reentrantLock.lock();
-                outputLine = msgBuffer.getWholeMsgAndClear(); // everyone take from the same message buffer.
+                // for problem 2 we don't clear it. the event generator will replace the message buffer with the latest message.
+                outputLine = msgBuffer.getWholeMsg(); // everyone take from the same message buffer.
                 //reentrantLock.unlock();
 
                 // send empty string if outputLine is null
