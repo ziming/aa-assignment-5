@@ -33,7 +33,7 @@ public class MessageBuffer
         reentrantLock.lock();
         try {
             msg.setLength(0);
-            msg.append(newText);
+            appendToBack(newText);
         } finally {
             reentrantLock.unlock();
         }
