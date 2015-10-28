@@ -110,10 +110,23 @@ public class MessageBuffer
         reentrantLock.lock();
         try {
             String temp = msg.toString();
-            System.out.println("returning: " + msg + " then clearing");
+
+            if (temp.length() == 0) {
+                return null;
+            }
+
+            // System.out.println("returning: " + msg + " then clearing");
+
+            // this is more correct in my opinion.
+            System.out.println("returning: " + temp + " then clearing");
+
             //  System.out.println("clearing");
             clear();
-            return (temp.length() == 0 ? null : temp);
+
+            // return null if temp length is 0 is handled earlier.
+            //return (temp.length() == 0 ? null : temp);
+            return temp;
+
         } finally {
             //System.out.println("Unlocking!");
             reentrantLock.unlock();
