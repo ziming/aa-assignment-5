@@ -1,9 +1,14 @@
 package aa.race.messagesOriginal;
 
-import aa.race.messages.*;
+import aa.race.messages.EventGenerator;
+import aa.race.messages.PullServer;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Properties;
+import java.util.Random;
 
 // This is the main class to run
 public class EventSource{
@@ -37,11 +42,11 @@ public class EventSource{
     getDelayIntervals (delayIntervals, eventFrequency, period);
 
     // create Message Buffer object
-    MessageBuffer msgBuffer = new MessageBuffer(bufferSize, dropNewCharWhenBufferFull);
+    aa.race.messages.MessageBuffer msgBuffer = new aa.race.messages.MessageBuffer(bufferSize, dropNewCharWhenBufferFull);
 
     // This is the Event Generator which uses delayIntervals to fire events. Each event is basically a message of msgSize characters in length.
     // Every time an event fires, the new message is inserted into the message buffer
-    aa.race.messages.EventGenerator eventGenerator = new aa.race.messages.EventGenerator(delayIntervals, msgBuffer, msgSize);
+    aa.race.messages.EventGenerator eventGenerator = new EventGenerator(delayIntervals, msgBuffer, msgSize);
     eventGenerator.start();
 
     // push mode
@@ -64,7 +69,7 @@ public class EventSource{
 
       for (int i = 0; i < numPullClients; i++)
       {
-          PullServer pullServer = new PullServer (msgBuffer, portOfServer+i, period);
+          aa.race.messages.PullServer pullServer = new PullServer(msgBuffer, portOfServer+i, period);
           pullServer.start();
          // System.out.println("started on " +(portOfServer+i);
       }
