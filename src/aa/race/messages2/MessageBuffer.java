@@ -28,8 +28,15 @@ public class MessageBuffer
 
     // Our addition for problem 2, if only want the latest just override it!
     public void setMessageBufferText(String newText) {
-        msg.setLength(0);
-        msg.append(newText);
+
+        reentrantLock.lock();
+        try {
+            msg.setLength(0);
+            msg.append(newText);
+        } finally {
+            reentrantLock.unlock();
+        }
+
     }
 
     // Append a String to the back of the encapsulated message
