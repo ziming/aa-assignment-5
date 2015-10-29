@@ -37,10 +37,19 @@ public class MessageBuffer
 
         while (true) {
 
-            // if cannot obtain lock go to end of loop
+            // if cannot obtain lock go to end of loop, experiment with timeout
+//            try {
+//                if (!writeLock.tryLock(3, TimeUnit.SECONDS)) {
+//                    continue;
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
             if (!writeLock.tryLock()) {
                 continue;
             }
+
 
             try {
                 // We can do msg = new StringBuffer(newText) too but I decided not to do that
@@ -48,6 +57,7 @@ public class MessageBuffer
                 // more characters than the buffer size limit.
                 msg.setLength(0);
                 appendToBack(newText);
+                return;
             } finally {
                 writeLock.unlock();
             }
@@ -121,6 +131,7 @@ public class MessageBuffer
                     }
                     // Message buffer size is not breached: whole message is inserted into buffer & life carries on
                     msg.append(newText);
+                    return;
                 }
             } finally {
                 writeLock.unlock();
@@ -144,6 +155,7 @@ public class MessageBuffer
 
             try {
                 msg.setLength(0);
+                return;
             } finally {
                 writeLock.unlock();
             }
