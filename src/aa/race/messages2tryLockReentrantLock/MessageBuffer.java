@@ -207,9 +207,6 @@ public class MessageBuffer
                 }
             }
         }
-
-
-
     }
 
     // Show the contents of the buffer to stdout
