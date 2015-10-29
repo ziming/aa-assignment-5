@@ -51,6 +51,8 @@ public class MessageBuffer
     {
         reentrantLock.lock();
         try {
+            // we need to lock even before msg.append(..) because what if 'msg' was cleared right after maxNoOfNewCharToAppend
+            // is assigned a value below? That would make things inaccurate and we discard unnecessarily.
             int maxNoOfNewCharToAppend = maxMsgSize - msg.length();
 
             // dropNewCharWhenBufferFull is true
