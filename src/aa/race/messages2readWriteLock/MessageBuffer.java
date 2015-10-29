@@ -85,7 +85,6 @@ public class MessageBuffer
                 // whole message is inserted into buffer
                 // newText is something like 1446024217384~************************************************************~
                 msg.append(newText);
-                System.out.println(msg.length());
                 return;
             }
 
