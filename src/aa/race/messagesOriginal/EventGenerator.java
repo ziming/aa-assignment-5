@@ -1,8 +1,7 @@
 package aa.race.messagesOriginal;
 
-import aa.race.messages.MessageBuffer;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 // This thread class is responsible for generating the events given the delay intervals, message buffer & message length of new messages
 // An event is manifested by the creation of a new message (of fixed length) & writing of that message to the message buffer.

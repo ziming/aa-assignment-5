@@ -1,10 +1,12 @@
 package aa.race.messagesOriginal;
 
-import aa.race.messages.*;
-
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Date;
-import java.io.*;
 
 // This class is only used in PULL mode. It represents a pull server which listens at a port for a pull client
 // When the client sends a request, messages from the message buffer are retrieved & sent back to the client.
@@ -14,12 +16,12 @@ public class PullServer extends Thread
     private long exptStartTime;
 
     // private attributes will be set in the constructor
-    private aa.race.messages.MessageBuffer msgBuffer;
+    private MessageBuffer msgBuffer;
     private int portOfServer;
     private int period;
 
     // Constructor
-    public PullServer(aa.race.messages.MessageBuffer msgBuffer, int portOfServer, int period)
+    public PullServer(MessageBuffer msgBuffer, int portOfServer, int period)
     {
         this.msgBuffer = msgBuffer;
         this.portOfServer = portOfServer;
