@@ -96,8 +96,7 @@ public class MessageBuffer
     {
         reentrantLock.lock();
         try {
-            if (msg.length() > 0)
-                msg.delete(0, msg.length());
+            msg.setLength(0);
         } finally {
             reentrantLock.unlock();
         }

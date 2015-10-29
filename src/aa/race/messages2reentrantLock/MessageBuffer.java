@@ -112,11 +112,7 @@ public class MessageBuffer
     {
         reentrantLock.lock();
         try {
-            if (msg.length() > 0)
-                // each message length is about 75
-//                System.out.println("Message length currently is: " + msg.length());
-                msg.delete(0, msg.length());
-//                System.out.println("Message length currently is: " + msg.length());
+            msg.setLength(0);
         } finally {
             reentrantLock.unlock();
         }
@@ -138,8 +134,8 @@ public class MessageBuffer
     // Similar to getWholeMsg, except that the buffer is cleared after the message is retrieved
     public String getWholeMsgAndClear()
     {
+        // this method is not used in problem 2.
 
-        // although this is read and write, it is as good as write in my opinion so I treating it as write.
         reentrantLock.lock();
         try {
             String temp = msg.toString();
@@ -147,21 +143,12 @@ public class MessageBuffer
             if (temp.length() == 0) {
                 return null;
             }
-
-            // System.out.println("returning: " + msg + " then clearing");
-
-            // this is more correct in my opinion.
             System.out.println("returning: " + temp + " then clearing");
-
-            //  System.out.println("clearing");
             clear();
 
-            // return null if temp length is 0 is handled earlier.
-            //return (temp.length() == 0 ? null : temp);
             return temp;
 
         } finally {
-            //System.out.println("Unlocking!");
             reentrantLock.unlock();
         }
 

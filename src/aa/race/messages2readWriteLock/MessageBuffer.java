@@ -117,11 +117,7 @@ public class MessageBuffer
     {
         writeLock.lock();
         try {
-            if (msg.length() > 0)
-                // each message length is about 75
-//                System.out.println("Message length currently is: " + msg.length());
-                msg.delete(0, msg.length());
-//                System.out.println("Message length currently is: " + msg.length());
+            msg.setLength(0);
         } finally {
             writeLock.unlock();
         }
@@ -144,31 +140,26 @@ public class MessageBuffer
     public String getWholeMsgAndClear()
     {
 
-        // although this is read and write, it is as good as write in my opinion so I treating it as write.
-        writeLock.lock();
+        // this method is not used in problem 2
+
+        String temp;
+        readLock.lock();
         try {
-            String temp = msg.toString();
+            temp = msg.toString();
 
             if (temp.length() == 0) {
                 return null;
             }
 
-            // System.out.println("returning: " + msg + " then clearing");
-
-            // this is more correct in my opinion.
             System.out.println("returning: " + temp + " then clearing");
 
-            //  System.out.println("clearing");
-            clear();
-
-            // return null if temp length is 0 is handled earlier.
-            //return (temp.length() == 0 ? null : temp);
-            return temp;
-
         } finally {
-            //System.out.println("Unlocking!");
-            writeLock.unlock();
+            readLock.unlock();
         }
+
+        clear(); // write lock inside clear
+
+        return temp;
 
     }
 
