@@ -2,7 +2,6 @@ package aa.race.messages2tryLockReadWriteLock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /*
@@ -11,13 +10,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class MessageBuffer
 {
+
+    // should StringBuffer be volatile since only EventGenerator "writes" to it?
     private StringBuffer msg; // the actual message being encapsulated
     private int maxMsgSize;   // size of this buffer in number of characters. This size cannot be breached
     private int noOfDroppedCharSoFar;  // a running count of the number of characters which have been discarded because the buffer is full
     private boolean dropNewCharWhenBufferFull; // determines if new characters will push out old characters if an insert is attempted when the buffer is full
 
     // Self added
-    private Lock reentrantLock = new ReentrantLock();
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Lock readLock = readWriteLock.readLock();
     private Lock writeLock = readWriteLock.writeLock();
@@ -189,12 +189,12 @@ public class MessageBuffer
     // Similar to getWholeMsg, except that the buffer is cleared after the message is retrieved
     public String getWholeMsgAndClear()
     {
-        // this method is not used in problem 2
+        // this method is not used in problem 2. Ignore it!
         String temp;
 
         while (true) {
 
-            if (!readLock.tryLock()) {
+            if (!writeLock.tryLock()) {
                 try {
                     temp = msg.toString();
 
@@ -208,7 +208,7 @@ public class MessageBuffer
                     return temp;
 
                 } finally {
-                    readLock.unlock();
+                    writeLock.unlock();
                 }
             }
         }

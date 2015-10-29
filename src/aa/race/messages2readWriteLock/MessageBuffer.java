@@ -2,7 +2,6 @@ package aa.race.messages2readWriteLock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /*
@@ -17,7 +16,6 @@ public class MessageBuffer
     private boolean dropNewCharWhenBufferFull; // determines if new characters will push out old characters if an insert is attempted when the buffer is full
 
     // Self added
-    private Lock reentrantLock = new ReentrantLock();
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Lock readLock = readWriteLock.readLock();
     private Lock writeLock = readWriteLock.writeLock();
@@ -144,9 +142,9 @@ public class MessageBuffer
     // Similar to getWholeMsg, except that the buffer is cleared after the message is retrieved
     public String getWholeMsgAndClear()
     {
-        // this method is not used in problem 2
+        // this method is not used in problem 2. Ignore it!
         String temp;
-        readLock.lock();
+        writeLock.lock();
         try {
             temp = msg.toString();
 
@@ -155,13 +153,12 @@ public class MessageBuffer
             }
 
             System.out.println("returning: " + temp + " then clearing");
+            clear(); // write lock inside clear
+            return temp;
 
         } finally {
-            readLock.unlock();
+            writeLock.unlock();
         }
-
-        clear(); // write lock inside clear
-        return temp;
     }
 
     // Show the contents of the buffer to stdout

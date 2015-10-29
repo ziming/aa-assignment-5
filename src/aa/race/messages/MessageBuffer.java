@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * represents the Message Buffer to which the Event Generator will be "writing" to
  */
 public class MessageBuffer {
+
     private StringBuffer msg; // the actual message being encapsulated
     private int maxMsgSize;   // size of this buffer in number of characters. This size cannot be breached
     private int noOfDroppedCharSoFar;  // a running count of the number of characters which have been discarded because the buffer is full
@@ -94,7 +95,6 @@ public class MessageBuffer {
         } finally {
             reentrantLock.unlock();
         }
-
     }
 
     // Return the contents of the buffer as a String or null if there is nothing inside

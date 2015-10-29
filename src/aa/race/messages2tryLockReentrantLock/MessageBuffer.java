@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class MessageBuffer
 {
+    // should StringBuffer be volatile since only EventGenerator "writes" to it?
     private StringBuffer msg; // the actual message being encapsulated
     private int maxMsgSize;   // size of this buffer in number of characters. This size cannot be breached
     private int noOfDroppedCharSoFar;  // a running count of the number of characters which have been discarded because the buffer is full
