@@ -135,7 +135,6 @@ public class MessageBuffer
     public String getWholeMsgAndClear()
     {
         // this method is not used in problem 2.
-
         reentrantLock.lock();
         try {
             String temp = msg.toString();
@@ -157,6 +156,7 @@ public class MessageBuffer
     // Show the contents of the buffer to stdout
     public void print()
     {
+        // this method is not used.
         System.out.println("Message Buffer: " + msg);
         System.out.println("Message Buffer contains " + msg.length() + " characters.");
     }
@@ -164,6 +164,7 @@ public class MessageBuffer
     // Returns true if buffer is empty (i.e. length is zero), returns false otherwise
     public boolean isEmpty()
     {
+        // this method is not used.
         return (msg.length() == 0);
     }
 }
