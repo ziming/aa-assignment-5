@@ -7,8 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Message Buffer class
  * represents the Message Buffer to which the Event Generator will be "writing" to
  */
-public class MessageBuffer
-{
+public class MessageBuffer {
     private StringBuffer msg; // the actual message being encapsulated
     private int maxMsgSize;   // size of this buffer in number of characters. This size cannot be breached
     private int noOfDroppedCharSoFar;  // a running count of the number of characters which have been discarded because the buffer is full
@@ -18,8 +17,7 @@ public class MessageBuffer
     private Lock reentrantLock = new ReentrantLock();
 
     // Constructor. initializes instance variables
-    public MessageBuffer(int maxMsgSize, boolean dropNewCharWhenBufferFull)
-    {
+    public MessageBuffer(int maxMsgSize, boolean dropNewCharWhenBufferFull) {
         msg = new StringBuffer("");
         noOfDroppedCharSoFar = 0;
         this.maxMsgSize = maxMsgSize;
@@ -30,18 +28,15 @@ public class MessageBuffer
     // Note that if the message buffer size is breached, characters will be dropped (discarded)
     // If dropNewCharWhenBufferFull is true, new characters will be dropped
     // If dropNewCharWhenBufferFull is false, the oldest characters will be dropped & new characters "pushed in"
-    public void appendToBack(String newText)
-    {
+    public void appendToBack(String newText) {
         reentrantLock.lock();
         try {
             int maxNoOfNewCharToAppend = maxMsgSize - msg.length();
 
             // dropNewCharWhenBufferFull is true
-            if (dropNewCharWhenBufferFull)
-            {
+            if (dropNewCharWhenBufferFull) {
                 // buffer is full - whole message dropped
-                if (maxNoOfNewCharToAppend <= 0)
-                {
+                if (maxNoOfNewCharToAppend <= 0) {
                     noOfDroppedCharSoFar += newText.length();
                     System.out.println("Message Buffer is full - dropping whole message of length: " + newText.length());
                     System.out.println("Message Buffer: total number of dropped characters so far: " + noOfDroppedCharSoFar);
@@ -49,8 +44,7 @@ public class MessageBuffer
                     return;
                 }
                 // part of new msg dropped
-                if (maxNoOfNewCharToAppend < newText.length())
-                {
+                if (maxNoOfNewCharToAppend < newText.length()) {
                     String charToAppend = newText.substring(0, maxNoOfNewCharToAppend);
                     msg.append(charToAppend);
                     int noOfCharToDrop = newText.length() - maxNoOfNewCharToAppend;
@@ -65,13 +59,12 @@ public class MessageBuffer
                 return;
             }
 
-            // dropNewCharWhenBufferFull is false
-            if (!dropNewCharWhenBufferFull)
-            {
+            // dropNewCharWhenBufferFull is false.
+            // We are going to ignore this since the default is true and I'm not changing it to false.
+            if (!dropNewCharWhenBufferFull) {
                 msg.append(newText);
                 // some characters already in the buffer will be dropped
-                if (maxNoOfNewCharToAppend < newText.length())
-                {
+                if (maxNoOfNewCharToAppend < newText.length()) {
                     int charToCutFrTheFront = msg.length() - maxMsgSize;
                     noOfDroppedCharSoFar += charToCutFrTheFront;
                     System.out.println("Message Buffer is full - pushing out " + charToCutFrTheFront + " characters already in the buffer.");
@@ -92,8 +85,7 @@ public class MessageBuffer
     }
 
     // Erase everything in the buffer
-    public void clear()
-    {
+    public void clear() {
         reentrantLock.lock();
         try {
             msg.setLength(0);
@@ -104,14 +96,13 @@ public class MessageBuffer
     }
 
     // Return the contents of the buffer as a String or null if there is nothing inside
-    public String getWholeMsg()
-    {
+    public String getWholeMsg() {
+        // this method is not used in problem 1
         return (msg.length() == 0 ? null : msg.toString());
     }
 
     // Similar to getWholeMsg, except that the buffer is cleared after the message is retrieved
-    public String getWholeMsgAndClear()
-    {
+    public String getWholeMsgAndClear() {
         reentrantLock.lock();
         try {
             String temp = msg.toString();
@@ -131,15 +122,15 @@ public class MessageBuffer
     }
 
     // Show the contents of the buffer to stdout
-    public void print()
-    {
+    public void print() {
+        // this method is not used in problem 1 and 2
         System.out.println("Message Buffer: " + msg);
         System.out.println("Message Buffer contains " + msg.length() + " characters.");
     }
 
     // Returns true if buffer is empty (i.e. length is zero), returns false otherwise
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
+        // this method is not used in problem 1 and 2.
         return (msg.length() == 0);
     }
 }

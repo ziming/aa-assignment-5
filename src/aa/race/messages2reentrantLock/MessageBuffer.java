@@ -32,6 +32,9 @@ public class MessageBuffer
 
         reentrantLock.lock();
         try {
+            // We can do msg = new StringBuffer(newText) too but I decided not to do that
+            // as logic regarding discard may not be applied in the event if newText contains
+            // more characters than the buffer size limit.
             msg.setLength(0);
             appendToBack(newText);
         } finally {
@@ -82,6 +85,7 @@ public class MessageBuffer
             }
 
             // dropNewCharWhenBufferFull is false
+            // We are going to ignore this since the default is true and I'm not changing it to false.
             if (!dropNewCharWhenBufferFull)
             {
                 msg.append(newText);
